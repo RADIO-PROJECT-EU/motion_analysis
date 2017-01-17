@@ -228,7 +228,7 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                                     
                     n=0;
                     
-                    for (x=xx-ss;x<xx+s+1s;x++) {
+                    for (x=xx-ss;x<xx+s+1;x++) {
                     for (y=yy-ss;y<yy+ss+1;y++) {
 
                 
@@ -415,7 +415,7 @@ void process(unsigned char *rgb_a, unsigned char *rgb_b,unsigned int index, unsi
 
     char str[1];
     
-    if(BOUNDARIES_CONFIG == 0)
+    /*if(BOUNDARIES_CONFIG == 0)
     {
       char strin[999];
       FILE * file;
@@ -534,6 +534,7 @@ void process(unsigned char *rgb_a, unsigned char *rgb_b,unsigned int index, unsi
       }
     }
     FIRST_ROUND = 0;
+*/
     process_function (rgb_a, rgb_b,COMMAND, showanno, unedited, shapesxy);
 
     height = top;

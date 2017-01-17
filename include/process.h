@@ -51,17 +51,17 @@
 //unsigned int cup[CUPR*CUPR*4];
 int *cup;
 unsigned char tempframe[640*480*3];
-unsigned int STANDING_PERSON_HEIGHT = 0;
-unsigned int OUTOFBED_LEFT = 0;
-unsigned int OUTOFBED_RIGHT = 0;
+int STANDING_PERSON_HEIGHT = 0;
+int OUTOFBED_LEFT = 0;
+int OUTOFBED_RIGHT = 0;
 
-unsigned int CUPX = 0;
-unsigned int CUPY = 0;
-unsigned int CUPR = 0;
+int CUPX = 0;
+int CUPY = 0;
+int CUPR = 0;
 
-unsigned int BOUNDARIES_CONFIG = 0;
-unsigned int CONFIGURATION_DONE = 0;
-unsigned int FIRST_ROUND = 1;
+int BOUNDARIES_CONFIG = 0;
+int CONFIGURATION_DONE = 0;
+int FIRST_ROUND = 1;
 
 
 
