@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import roslib, rospy
-import rospkg
 from std_msgs.msg import String
 
 def start():
@@ -19,8 +18,7 @@ def start():
         	print " 'd' for CUPY upwards "
         	print " 'c' for CUPY downwards "
         	print " 'g' for CUPR increase "
-        	print " 'b' for CUPY decrease "
-        	print " 'esc' for exiting configuration "
+        	print " 'b' for CUPR decrease "
 
 		com = raw_input()
 		publisher.publish(str(com))

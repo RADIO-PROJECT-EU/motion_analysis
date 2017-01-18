@@ -69,51 +69,48 @@ void configurationCallback(std_msgs::String str){
 	}
       }
       else if(str.data.compare("d")==0){ //d
-        if(CUPY - 20 >= 0){
+        if(CUPY - CUPR - 20 >= 0){
           CUPY = CUPY - 20;
 	}
 	else{
-	  CUPY = 0;
+	  CUPY = CUPR;
 	}
       }
       else if(str.data.compare("c")==0){ //c
-        if(CUPY + 20 <= 479){
+        if(CUPY + CUPR + 20 <= 479){
           CUPY = CUPY + 20;
 	}
 	else{
-	  CUPY = 479;
+	  CUPY = 479-CUPR;
 	}
       } 
       else if(str.data.compare("x")==0){ //x   TO CHECK
-        if(CUPX - 20 >= 0){
+        if(CUPX - CUPR - 20 >= 0){
           CUPX = CUPX - 20;
 	}
 	else{
-	  CUPX = 0;
+	  CUPX = CUPR;
 	}
       }
       else if(str.data.compare("v")==0){ //v
-        if(CUPX + 20 <= 639){
+        if(CUPX + CUPR + 20 <= 639){
           CUPX = CUPX + 20;
 	}
 	else{
-	  CUPX = 639;
+	  CUPX = 639 - CUPR;
 	}
       }
       else if(str.data.compare("g")==0){ //g
-        if(CUPX - 20 <= 0){
+        if(CUPX - CUPR -20 >= 0 && CUPY - CUPR - 20 >= 0 && CUPX + CUPR + 20 <= 639 && CUPY + CUPR + 20 <= 479){
           CUPR = CUPR + 20;
-	}
-	else{
-	  CUPR = 0;
 	}
       }
       else if(str.data.compare("b")==0){ //b
-        if(CUPX + 20 <= 639){
+        if(CUPR - 20 >= 20){
           CUPR = CUPR - 20;
 	}
 	else{
-	  CUPR = 639;
+	  CUPR = 20;
 	
 	}
       }
@@ -181,9 +178,9 @@ int main(int argc, char** argv) {
   n.param("motion_analysis/STANDING_PERSON_HEIGHT", STANDING_PERSON_HEIGHT, 0);
   n.param("motion_analysis/OUTOFBED_LEFT", OUTOFBED_LEFT, 0);
   n.param("motion_analysis/OUTOFBED_RIGHT", OUTOFBED_RIGHT, 0);
-  n.param("motion_analysis/CUPX", CUPX, 0);
-  n.param("motion_analysis/CUPY", CUPY, 0);
-  n.param("motion_analysis/CUPR", CUPR, 0);
+  n.param("motion_analysis/CUPX", CUPX, 100);
+  n.param("motion_analysis/CUPY", CUPY, 100);
+  n.param("motion_analysis/CUPR", CUPR, 40);
   n.param("motion_analysis/configuration_mode", configuration_mode, false);
   n.param("motion_analysis/configuration_keypress_topic", conf_topic, std::string("motion_analysis/configuration/keypress"));
 
@@ -242,7 +239,7 @@ int main(int argc, char** argv) {
       
       process((unsigned char *)RGB,(unsigned char *)Bac,index,showanno, bed_answer, obj_answer, (unsigned char *)RGB_unedited, shapesxy);
 
-      if(placed == MODE_HUMAN_MOVEMENT){
+      if(!configuration_mode && placed == MODE_HUMAN_MOVEMENT){
         if(bed_answer != -1){
           std_msgs::Header header;
           header.stamp = ros::Time::now();
@@ -251,7 +248,7 @@ int main(int argc, char** argv) {
           string_publisher_person.publish(string_msg);
         }
       }
-      else if(placed == MODE_DETECT_OBJECT_MOVEMENT){
+      else if(!configuration_mode && placed == MODE_DETECT_OBJECT_MOVEMENT){
         if(obj_answer != -1){
           std_msgs::Header header;
           header.stamp = ros::Time::now();
