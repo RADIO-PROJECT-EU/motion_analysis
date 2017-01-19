@@ -21,7 +21,7 @@
 #define COMMAND 5
 #define ALGO_1 //bed detection
 #define ALGO_2 //cup detection
-#define SENSITIVITY 30
+//#define SENSITIVITY 60
 //#define STANDING_PERSON_HEIGHT 150
 //#define OUTOFBED_LEFT 150
 //#define OUTOFBED_RIGHT 450
@@ -29,8 +29,8 @@
 //#define CUPX 500
 //#define CUPY 200
 //#define CUPR 40
-#define CUPTHRESHOLD 80
-#define CUPTHRSCOUNT 30
+//#define CUPTHRESHOLD 80
+//#define CUPTHRSCOUNT 30
 
 #define REDV   0
 #define GREENV 1
@@ -58,6 +58,11 @@ int OUTOFBED_RIGHT = 0;
 int CUPX = 0;
 int CUPY = 0;
 int CUPR = 0;
+
+int SENSITIVITY = 30;
+int CUPTHRESHOLD = 80;
+int CUPTHRSCOUNT = 30;
+
 
 int BOUNDARIES_CONFIG = 0;
 int CONFIGURATION_DONE = 0;

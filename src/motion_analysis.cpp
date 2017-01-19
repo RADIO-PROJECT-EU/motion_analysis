@@ -11,6 +11,10 @@
 #include "std_msgs/Int32.h"
 #include "motion_analysis/shapes_msg.h"
 #include "motion_analysis/AnswerWithHeader.h"
+#include <ros/package.h>
+#include <iostream>
+#include <fstream>
+#include <boost/algorithm/string/predicate.hpp>
 
 
 cv_bridge::CvImagePtr image = 0;  
@@ -19,8 +23,7 @@ sensor_msgs::ImageConstPtr ros_image;
 motion_analysis::AnswerWithHeader string_msg;
 
 void configurationCallback(std_msgs::String str){
-      ROS_WARN("got something!");
-      if(str.data.compare("q")==0){ //q
+      if(str.data.compare("h+")==0){ //q
         if(STANDING_PERSON_HEIGHT - 20 >= 0){
           STANDING_PERSON_HEIGHT = STANDING_PERSON_HEIGHT - 20;
 	}
@@ -28,7 +31,7 @@ void configurationCallback(std_msgs::String str){
 	  STANDING_PERSON_HEIGHT = 0;
 	}
       }
-      else if(str.data.compare("a")==0){ //a
+      else if(str.data.compare("h-")==0){ //a
         if(STANDING_PERSON_HEIGHT + 20 <= 479){
           STANDING_PERSON_HEIGHT = STANDING_PERSON_HEIGHT + 20;
 	}
@@ -36,7 +39,7 @@ void configurationCallback(std_msgs::String str){
 	  STANDING_PERSON_HEIGHT = 479;
 	}
       }
-      else if(str.data.compare("w")==0){ //w
+      else if(str.data.compare("bl-")==0){ //w
         if(OUTOFBED_LEFT - 20 >= 0){
           OUTOFBED_LEFT = OUTOFBED_LEFT - 20;
 	}
@@ -44,7 +47,7 @@ void configurationCallback(std_msgs::String str){
 	  OUTOFBED_LEFT = 0;
 	}
       }
-      else if(str.data.compare("e")==0){ //e
+      else if(str.data.compare("bl+")==0){ //e
         if(OUTOFBED_LEFT + 20 <= 639){
           OUTOFBED_LEFT = OUTOFBED_LEFT + 20;
 	}
@@ -52,7 +55,7 @@ void configurationCallback(std_msgs::String str){
 	  OUTOFBED_LEFT = 639;
 	}
       }
-      else if(str.data.compare("o")==0){ //o
+      else if(str.data.compare("br-")==0){ //o
         if(OUTOFBED_RIGHT - 20 >= 0){
           OUTOFBED_RIGHT = OUTOFBED_RIGHT - 20;
 	}
@@ -60,7 +63,7 @@ void configurationCallback(std_msgs::String str){
 	  OUTOFBED_RIGHT = 0;
 	}
       }
-      else if(str.data.compare("p")==0){ //p
+      else if(str.data.compare("br+")==0){ //p
         if(OUTOFBED_RIGHT + 20 <= 639){
           OUTOFBED_RIGHT = OUTOFBED_RIGHT + 20;
 	}
@@ -68,7 +71,7 @@ void configurationCallback(std_msgs::String str){
 	  OUTOFBED_RIGHT = 639;
 	}
       }
-      else if(str.data.compare("d")==0){ //d
+      else if(str.data.compare("cy+")==0){ //d
         if(CUPY - CUPR - 20 >= 0){
           CUPY = CUPY - 20;
 	}
@@ -76,7 +79,7 @@ void configurationCallback(std_msgs::String str){
 	  CUPY = CUPR;
 	}
       }
-      else if(str.data.compare("c")==0){ //c
+      else if(str.data.compare("cy-")==0){ //c
         if(CUPY + CUPR + 20 <= 479){
           CUPY = CUPY + 20;
 	}
@@ -84,7 +87,7 @@ void configurationCallback(std_msgs::String str){
 	  CUPY = 479-CUPR;
 	}
       } 
-      else if(str.data.compare("x")==0){ //x   TO CHECK
+      else if(str.data.compare("cx-")==0){ //x
         if(CUPX - CUPR - 20 >= 0){
           CUPX = CUPX - 20;
 	}
@@ -92,7 +95,7 @@ void configurationCallback(std_msgs::String str){
 	  CUPX = CUPR;
 	}
       }
-      else if(str.data.compare("v")==0){ //v
+      else if(str.data.compare("cx+")==0){ //v
         if(CUPX + CUPR + 20 <= 639){
           CUPX = CUPX + 20;
 	}
@@ -100,19 +103,45 @@ void configurationCallback(std_msgs::String str){
 	  CUPX = 639 - CUPR;
 	}
       }
-      else if(str.data.compare("g")==0){ //g
+      else if(str.data.compare("cr+")==0){ //g
         if(CUPX - CUPR -20 >= 0 && CUPY - CUPR - 20 >= 0 && CUPX + CUPR + 20 <= 639 && CUPY + CUPR + 20 <= 479){
           CUPR = CUPR + 20;
 	}
       }
-      else if(str.data.compare("b")==0){ //b
+      else if(str.data.compare("cr-")==0){ //b
         if(CUPR - 20 >= 20){
           CUPR = CUPR - 20;
 	}
 	else{
 	  CUPR = 20;
-	
 	}
+      }
+      else if(boost::starts_with(str.data, "s ")){
+	SENSITIVITY = atoi(str.data.substr(2).c_str());
+      }
+      else if(boost::starts_with(str.data, "ct ")){
+	CUPTHRESHOLD = atoi(str.data.substr(3).c_str());
+      }
+      else if(boost::starts_with(str.data, "cc ")){
+	CUPTHRSCOUNT = atoi(str.data.substr(3).c_str());
+      }
+      else if(str.data.compare("save")==0){//save
+	std::string path = ros::package::getPath("motion_analysis");
+	path += "/config/";
+	std::string filename = path + "conf.yaml";
+	std::ofstream file;
+	file.open(filename, std::fstream::out);
+	file << "STANDING_PERSON_HEIGHT: " << STANDING_PERSON_HEIGHT << std::endl;
+	file << "OUTOFBED_LEFT: " << OUTOFBED_LEFT << std::endl;
+	file << "OUTOFBED_RIGHT: " << OUTOFBED_RIGHT << std::endl;
+	file << "CUPX: " << CUPX << std::endl;
+	file << "CUPY: " << CUPY << std::endl;
+	file << "CUPR: " << CUPR << std::endl;
+	file << "SENSITIVITY: " << SENSITIVITY << std::endl;
+	file << "CUPTHRESHOLD: " << CUPTHRESHOLD << std::endl;
+	file << "CUPTHRSCOUNT: " << CUPTHRSCOUNT << std::endl; 
+	file.close();
+	ROS_WARN("Configuration saved successfully!");
       }
       else{
         ROS_WARN("I got a wrong command!");
@@ -181,13 +210,19 @@ int main(int argc, char** argv) {
   n.param("motion_analysis/CUPX", CUPX, 100);
   n.param("motion_analysis/CUPY", CUPY, 100);
   n.param("motion_analysis/CUPR", CUPR, 40);
+  n.param("motion_analysis/SENSITIVITY", SENSITIVITY, 30);
+  n.param("motion_analysis/CUPTHRESHOLD", CUPTHRESHOLD, 80);
+  n.param("motion_analysis/CUPTHRSCOUNT", CUPTHRSCOUNT, 30);
   n.param("motion_analysis/configuration_mode", configuration_mode, false);
   n.param("motion_analysis/configuration_keypress_topic", conf_topic, std::string("motion_analysis/configuration/keypress"));
 
   ros::Subscriber img_in, object_state_in, conf_in;
   img_in = n.subscribe<sensor_msgs::Image>(image_topic, 5, imageCallback);
   object_state_in = n.subscribe<std_msgs::Int32>(motion_analysis_mode_topic, 5, objectStateCallback);
-  conf_in = n.subscribe<std_msgs::String>(conf_topic, 1, configurationCallback);
+
+  if(configuration_mode){
+	conf_in = n.subscribe<std_msgs::String>(conf_topic, 1, configurationCallback);
+  }
 
   ros::Publisher string_publisher_person = n.advertise<motion_analysis::AnswerWithHeader>(motion_analysis_human_topic, 1);
   ros::Publisher string_publisher_object = n.advertise<motion_analysis::AnswerWithHeader>(motion_analysis_object_topic, 1);
