@@ -413,7 +413,10 @@ void process(unsigned char *rgb_a, unsigned char *rgb_b,unsigned int index, unsi
 
     char str[1];
 
-    cup = new int[CUPR*CUPR*4];    
+    if (ft){
+        cup = new int[CUPR*CUPR*4];
+        ft = false;
+    }
 
     process_function (rgb_a, rgb_b,COMMAND, showanno, unedited, shapesxy);
 
