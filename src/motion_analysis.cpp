@@ -289,6 +289,16 @@ int main(int argc, char** argv) {
   while(ros::ok()) {
     if(running){
       if(IMAGE_RECEIVED == 1){
+        x1p = 0;
+        x2p = 0;
+        y1p = STANDING_PERSON_HEIGHT + 1;
+        y2p = STANDING_PERSON_HEIGHT + 1;
+        cxp = 0;
+        cyp = STANDING_PERSON_HEIGHT + 1;
+        top = STANDING_PERSON_HEIGHT + 1;
+        cupmoved = 0;
+        gotup = 0;
+
         if (iteration > 16383){
             iteration = 0;
           }
