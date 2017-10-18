@@ -20,6 +20,7 @@
 bool running = false;
 ros::NodeHandle *nptr;
 ros::Subscriber conf_in;
+unsigned int iteration = 0;
 std::string conf_topic = "";
 std::string image_topic = "";
 cv_bridge::CvImagePtr image = 0;
@@ -195,6 +196,8 @@ bool nodeStateCallback(radio_services::InstructionWithAnswer::Request &req, radi
     running = false;
     img_in.shutdown();
     conf_in.shutdown();
+    iteration = 0;
+    IMAGE_RECEIVED = 0;
     ROS_INFO("Stoppped motion_analysis!");
   }
   else if(req.command == 1 || req.command == 10 || req.command == 11 || req.command == 12){
@@ -274,7 +277,7 @@ int main(int argc, char** argv) {
 
   ros::ServiceServer service = n.advertiseService(motion_analysis_node_state_service, nodeStateCallback);
 
-  unsigned int iteration, index , showanno;
+  unsigned int index , showanno;
 
   showanno = 2;
   iteration = 1;
@@ -312,7 +315,7 @@ int main(int argc, char** argv) {
         cv_bridge::CvImagePtr unedited_image = cvImageFromROS();
         unsigned char *unedited_image_data = (unsigned char*)(unedited_image->image.data);
 
-        index = iteration;
+        index = iteration % 5;
 
         int rows    = image->image.rows;
         int columns = image->image.cols;
