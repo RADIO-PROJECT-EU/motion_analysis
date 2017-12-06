@@ -232,21 +232,21 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                     for (y=yy-ss;y<yy+ss+1;y++) {
 
                 
-                    if ((abs(rgb_a[(x*480+y)*3+REDV  ] - rgb_b[(x*480+y)*3+REDV  ] ))>40) { 
+                    if ((abs(rgb_a[(x*480+y)*3+REDV  ] - rgb_b[(x*480+y)*3+REDV  ] ))>DELTA) { 
                         if (showanno>0) rgb_a[(x*480+y)*3+REDV  ] = 70; 
                         n = n + abs(rgb_a[(x*480+y)*3+REDV  ] - rgb_b[(x*480+y)*3+REDV  ] );
                     }
                     else 
                         if (showanno>0) rgb_a[(x*480+y)*3+REDV  ] = rgb_a[(x*480+y)*3+REDV  ] /4;
                     
-                    if ((abs(rgb_a[(x*480+y)*3+GREENV] - rgb_b[(x*480+y)*3+GREENV] ))>40) {
+                    if ((abs(rgb_a[(x*480+y)*3+GREENV] - rgb_b[(x*480+y)*3+GREENV] ))>DELTA) {
                         if (showanno>0) rgb_a[(x*480+y)*3+GREENV] = 70; 
                         n = n + abs(rgb_a[(x*480+y)*3+GREENV ] - rgb_b[(x*480+y)*3+GREENV ] );
                     }
                     else 
                         if (showanno>0) rgb_a[(x*480+y)*3+GREENV] = rgb_a[(x*480+y)*3+GREENV] /4;
                         
-                    if ((abs(rgb_a[(x*480+y)*3+BLUEV ] - rgb_b[(x*480+y)*3+BLUEV ] ))>40) {
+                    if ((abs(rgb_a[(x*480+y)*3+BLUEV ] - rgb_b[(x*480+y)*3+BLUEV ] ))>DELTA) {
                         if (showanno>0) rgb_a[(x*480+y)*3+BLUEV ] = 70; 
                         n = n + abs(rgb_a[(x*480+y)*3+BLUEV  ] - rgb_b[(x*480+y)*3+BLUEV ] );
                     }
