@@ -60,6 +60,8 @@ int CUPY = 0;
 int CUPR = 0;
 
 int SENSITIVITY = 30;
+int DELTA = 40;
+
 int CUPTHRESHOLD = 80;
 int CUPTHRSCOUNT = 30;
 
