@@ -124,13 +124,20 @@ void configurationCallback(std_msgs::String str){
         }
       }
       else if(boost::starts_with(str.data, "s ")){
-        SENSITIVITY = atoi(str.data.substr(2).c_str());
+        SENSITIVITY = atoi(str.data.substr(2).c_str());   
+      }
+      else if(boost::starts_with(str.data, "a ")){
+        ALLOWEDDIFF = atoi(str.data.substr(2).c_str());
       }
       else if(boost::starts_with(str.data, "ct ")){
         CUPTHRESHOLD = atoi(str.data.substr(3).c_str());
       }
       else if(boost::starts_with(str.data, "cc ")){
         CUPTHRSCOUNT = atoi(str.data.substr(3).c_str());
+      }
+      else if(boost::starts_with(str.data, "mo ")){
+        placed = atoi(str.data.substr(3).c_str()) -1 ;
+        if ((placed>2)||(placed<0)) placed = 0;
       }
       else if(str.data.compare("save")==0){
         std::string path = ros::package::getPath("motion_analysis");
@@ -145,6 +152,7 @@ void configurationCallback(std_msgs::String str){
         file << "CUPY: " << CUPY << std::endl;
         file << "CUPR: " << CUPR << std::endl;
         file << "SENSITIVITY: " << SENSITIVITY << std::endl;
+        file << "ALLOWEDDIFF: " << ALLOWEDDIFF << std::endl;
         file << "CUPTHRESHOLD: " << CUPTHRESHOLD << std::endl;
         file << "CUPTHRSCOUNT: " << CUPTHRSCOUNT << std::endl; 
         file.close();
@@ -158,9 +166,11 @@ void configurationCallback(std_msgs::String str){
         CUPY = 240;
         CUPR = 40;
         SENSITIVITY = 350;
+        ALLOWEDDIFF = 40;
         CUPTHRESHOLD = 80;
         CUPTHRSCOUNT = 30;
         ROS_WARN("Configuration reset!");
+        placed = 0;
       }
       else{
         ROS_WARN("I got a wrong command!");
@@ -263,6 +273,7 @@ int main(int argc, char** argv) {
   n.param("motion_analysis/CUPY", CUPY, 240);
   n.param("motion_analysis/CUPR", CUPR, 40);
   n.param("motion_analysis/SENSITIVITY", SENSITIVITY, 350);
+  n.param("motion_analysis/ALLOWEDDIFF",ALLOWEDDIFF, 40);
   n.param("motion_analysis/CUPTHRESHOLD", CUPTHRESHOLD, 80);
   n.param("motion_analysis/CUPTHRSCOUNT", CUPTHRSCOUNT, 30);
   n.param("motion_analysis/configuration_mode", configuration_mode, false);

@@ -5,7 +5,7 @@
   <description>The motion_analysis ros package</description>
 
 
-  <maintainer email="emariatos@gmail.com">Vagelis Mariatos</maintainer>
+  <maintainer email="emariatos@gmail.com">Evangelos Mariatos</maintainer>
   <maintainer email="konstant@iit.demokritos.gr">Stasinos Konstantopoulos</maintainer>
   <maintainer email="gstavrinos@iit.demokritos.gr">George Stavrinos</maintainer>
 
@@ -13,7 +13,7 @@
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
   <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <license>BSD</license>
 
 
   <!-- Url tags are optional, but mutiple are allowed, one per tag -->

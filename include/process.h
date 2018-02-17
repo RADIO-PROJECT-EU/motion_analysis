@@ -49,6 +49,7 @@
  */
  
 //unsigned int cup[CUPR*CUPR*4];
+
 int *cup;
 unsigned char tempframe[640*480*3];
 int STANDING_PERSON_HEIGHT = 0;
@@ -60,10 +61,9 @@ int CUPY = 0;
 int CUPR = 0;
 
 int SENSITIVITY = 30;
-int DELTA = 40;
-
 int CUPTHRESHOLD = 80;
 int CUPTHRSCOUNT = 30;
+int ALLOWEDDIFF = 40;
 
 
 int BOUNDARIES_CONFIG = 0;

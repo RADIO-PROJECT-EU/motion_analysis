@@ -11,35 +11,35 @@
 
 int traffic_light(unsigned char *rgb_a, unsigned int state){
 
-    unsigned int x,y,cyp,cxp;
+    unsigned int x,y,cypt,cxpt;
     int tmpi;
 
     if (state & 0x01) {
-        cxp = 610;
-        cyp = 360;
-        for (x=cxp-30;x<cxp+30;x++) {
-            for (y=cyp-30;y<cyp+30;y++) {
-                tmpi = 255 - ((x-cxp)*(x-cxp)+(y-cyp)*(y-cyp))/3;
+        cxpt = 610;
+        cypt = 360;
+        for (x=cxpt-30;x<cxpt+30;x++) {
+            for (y=cypt-30;y<cypt+30;y++) {
+                tmpi = 255 - ((x-cxpt)*(x-cxpt)+(y-cypt)*(y-cypt))/3;
                 if (tmpi>0) rgb_a[(x*480+y)*3+BLUEV ] = tmpi;
             }
         }
     }
     if (state & 0x02) {
-        cxp = 610;
-        cyp = 400;
-        for (x=cxp-30;x<cxp+30;x++) {
-            for (y=cyp-30;y<cyp+30;y++) {
-                tmpi = 255 - ((x-cxp)*(x-cxp)+(y-cyp)*(y-cyp))/3;
+        cxpt = 610;
+        cypt = 400;
+        for (x=cxpt-30;x<cxpt+30;x++) {
+            for (y=cypt-30;y<cypt+30;y++) {
+                tmpi = 255 - ((x-cxpt)*(x-cxpt)+(y-cypt)*(y-cypt))/3;
                 if (tmpi>0) rgb_a[(x*480+y)*3+REDV ] = tmpi;
             }
         }
     }
     if (state & 0x04) {
-        cxp = 610;
-        cyp = 440;
-        for (x=cxp-30;x<cxp+30;x++) {
-            for (y=cyp-30;y<cyp+30;y++) {
-                tmpi = 255 - ((x-cxp)*(x-cxp)+(y-cyp)*(y-cyp))/3;
+        cxpt = 610;
+        cypt = 440;
+        for (x=cxpt-30;x<cxpt+30;x++) {
+            for (y=cypt-30;y<cypt+30;y++) {
+                tmpi = 255 - ((x-cxpt)*(x-cxpt)+(y-cypt)*(y-cypt))/3;
                 if (tmpi>0) rgb_a[(x*480+y)*3+GREENV] = tmpi;
             }
         }
@@ -204,7 +204,7 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                 y1=438; y2=1;
                  
                 cx = 0; cy = 0; nn = 0;
-                 
+
                 // Store rgb in tempframe (make sure we do not loose it due to annotation)
                 for (y=0;y<480;y++) {
                   for (x=0;x<640;x++) {
@@ -214,13 +214,76 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                   }
                 }
 
+
+                //#define ADJUST
+	        #ifdef ADJUST
+                //This is pseudo-code in early concept phase - does not seem needed
+             
+                   // Show region for adjustment (a 20x20 region above the cup)
+                   /*
+                    for (x=CUPX-10; x<CUPX+10; x++) {
+ 		    for (y=10     ; y<30     ; y++) {
+                        rgb_a[(x*480 + y)*3+BLUEV ] = 255;
+                        rgb_a[(x*480 + y)*3+REDV ] = 255;
+                    }
+                    }
+                   */
+
+     
+               // if first time: 
+               if (placed==MODE_INIT_OBJECT) { // the moment when the cup is placed
+                 // 1. read region averages above cup location (a 20x20 region above the cup)
+
+                 //ta=0;tb=0;tc=0;tt=0;
+
+                 for (x=CUPX-10; x<CUPX+10; x++) {
+ 		 for (y=10     ; y<30     ; y++) {
+                        
+                            //a=rgb_a[(x*480 + y)*3+REDV]; ta=ta+a;
+                            //b=rgb_a[(x*480 + y)*3+GREENV]; tb=tb+b;
+                            //c=rgb_a[(x*480 + y)*3+BLUEV]; tc=tc+c;
+                            //tt=tt+1;
+                            
+                    }
+                 }
+                 // at this point tt should be 400, makes no harm to check :-)
+                 // if (tt<>400) printf("Something is wrong here. tt should be 400 but is: %d\n",tt);
+                 // ava=ta/tt; avb=tb/tt; avc=tc/tt;
+
+
+                 // 2. store region averages above cup location
+
+               // if next times:
+               } else { // at evey other time. Please note that we use cup placement also as initialization
+                 // 1. read region averages above cup location (a 20x20 region above the cup)
+                 //    use same code as above but store in different variables, e.g. nva,nvb,nvc
+                      
+                 // 2. calculate diffs
+                 //    dfa = nva-ava; dfb = nvb-avb; dfc = nvc-avc;
+
+                 // 3. If diffs small ( < 10 or else makes no sense)
+                 //    if  ( max(abs(dfa),abs(dfb),abs(dfc)) <10 ) {
+                 //       for all pixels in image {
+                 //              add diffs  (check for overflows)
+                 //              a = rgb_a[(x*480 + y)*3+REDV  ] + dfa; 
+                 //              if ((a<256)&&(a>-1) rgb_a[(x*480 + y)*3+REDV  ]=a;
+                 //              a = rgb_a[(x*480 + y)*3+GREENV] + dfb;
+                 //              if ((a<256)&&(a>-1) rgb_a[(x*480 + y)*3+GREENV]=a;
+                 //              a = rgb_a[(x*480 + y)*3+BLUEV ] + dfc;
+                 //              if ((a<256)&&(a>-1) rgb_a[(x*480 + y)*3+BLUEV ]=a;
+                 //       }  
+                 //    }
+
+               }
+               #endif
+
                 #ifdef ALGO_1
         
-        // Define ss to any value >0 and <(480/4). 
-        // Reasonable results expected only for values in between 2 and 10.
+                // Define ss to any value >0 and <(480/4). 
+                // Reasonable results expected only for values in between 2 and 10.
                 ss= 4;           // +/- from center of each block
         
-        s = ss + ss + 1; // size of each block
+                s = ss + ss + 1; // size of each block
                 
                 // find diff in squares of size s, and find top,bot,right,left
                 for (yy=s;yy<480-s;yy+=s) {
@@ -232,26 +295,26 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                     for (y=yy-ss;y<yy+ss+1;y++) {
 
                 
-                    if ((abs(rgb_a[(x*480+y)*3+REDV  ] - rgb_b[(x*480+y)*3+REDV  ] ))>DELTA) { 
+                    if ((abs(rgb_a[(x*480+y)*3+REDV  ] - rgb_b[(x*480+y)*3+REDV  ] ))>ALLOWEDDIFF) { 
                         if (showanno>0) rgb_a[(x*480+y)*3+REDV  ] = 70; 
                         n = n + abs(rgb_a[(x*480+y)*3+REDV  ] - rgb_b[(x*480+y)*3+REDV  ] );
                     }
-                    else 
-                        if (showanno>0) rgb_a[(x*480+y)*3+REDV  ] = rgb_a[(x*480+y)*3+REDV  ] /4;
+                    //else 
+                        //if (showanno>0) rgb_a[(x*480+y)*3+REDV  ] = rgb_a[(x*480+y)*3+REDV  ] /4;
                     
-                    if ((abs(rgb_a[(x*480+y)*3+GREENV] - rgb_b[(x*480+y)*3+GREENV] ))>DELTA) {
+                    if ((abs(rgb_a[(x*480+y)*3+GREENV] - rgb_b[(x*480+y)*3+GREENV] ))>ALLOWEDDIFF) {
                         if (showanno>0) rgb_a[(x*480+y)*3+GREENV] = 70; 
                         n = n + abs(rgb_a[(x*480+y)*3+GREENV ] - rgb_b[(x*480+y)*3+GREENV ] );
                     }
-                    else 
-                        if (showanno>0) rgb_a[(x*480+y)*3+GREENV] = rgb_a[(x*480+y)*3+GREENV] /4;
+                    //else 
+                        //if (showanno>0) rgb_a[(x*480+y)*3+GREENV] = rgb_a[(x*480+y)*3+GREENV] /4;
                         
-                    if ((abs(rgb_a[(x*480+y)*3+BLUEV ] - rgb_b[(x*480+y)*3+BLUEV ] ))>DELTA) {
+                    if ((abs(rgb_a[(x*480+y)*3+BLUEV ] - rgb_b[(x*480+y)*3+BLUEV ] ))>ALLOWEDDIFF) {
                         if (showanno>0) rgb_a[(x*480+y)*3+BLUEV ] = 70; 
                         n = n + abs(rgb_a[(x*480+y)*3+BLUEV  ] - rgb_b[(x*480+y)*3+BLUEV ] );
                     }
-                    else 
-                        if (showanno>0) rgb_a[(x*480+y)*3+BLUEV ] = rgb_a[(x*480+y)*3+BLUEV ] /4;
+                    //else 
+                        //if (showanno>0) rgb_a[(x*480+y)*3+BLUEV ] = rgb_a[(x*480+y)*3+BLUEV ] /4;
                         
                     }
                     }
@@ -297,7 +360,7 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                 //make sure we will not get crazy values for edges of rect
                 if ((x1p<1)||(x2p>639)||(y1p<1)||(y2p>479))
                 {
-                    x1p=1;x2p=639;y1p=1;y2p=439; cxp= 320; cyp= 240;
+                    x1p=1;x2p=639;y1p=1;y2p=439; //cxp= 320; cyp= 240;
                 }
 
                 //blacken all the unedited image except from the part inside the rectangle
@@ -333,7 +396,7 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                         rgb_a[(OUTOFBED_RIGHT*480+y)*3+GREENV] = 255;
                     }
                 
-                
+                    // Here we draw a ball at the centre of changes
                     if (!((cxp<30)||(cxp>610)||(cyp<30)||(cyp>450))) {
                         for (x=cxp-30;x<cxp+30;x++) {
                             for (y=cyp-30;y<cyp+30;y++) {
@@ -374,15 +437,24 @@ int process_function (unsigned char *rgb_a, unsigned char *rgb_b,unsigned char c
                 }
                 if ((placed==MODE_DETECT_OBJECT_MOVEMENT)&&(cupdiff>CUPTHRSCOUNT)) cupmoved=1; else cupmoved=0; 
                 
+ 
+
                 if (showanno==2) {
-                   // Show region for cup
+                   int colorrect;
+
+                    if (cupmoved==1) 
+                        colorrect = BLUEV;
+                    else
+                        colorrect = GREENV;
+         
+                    // Show region for cup
                     for (x=CUPX-CUPR; x<CUPX+CUPR; x++) {
-                        rgb_a[(x*480 + CUPY + CUPR)*3+GREENV] = 255;
-                        rgb_a[(x*480 + CUPY - CUPR)*3+GREENV] = 255;
+                        rgb_a[(x*480 + CUPY + CUPR)*3+colorrect] = 255;
+                        rgb_a[(x*480 + CUPY - CUPR)*3+colorrect] = 255;
                     }
                     for (y=CUPY-CUPR; y<CUPY+CUPR; y++) {
-                        rgb_a[((CUPX+CUPR)*480 + y)*3+GREENV] = 255;
-                        rgb_a[((CUPX-CUPR)*480 + y)*3+GREENV] = 255;
+                        rgb_a[((CUPX+CUPR)*480 + y)*3+colorrect] = 255;
+                        rgb_a[((CUPX-CUPR)*480 + y)*3+colorrect] = 255;
                     }
                     
                 }

@@ -20,8 +20,10 @@ def start():
         	print " 'cr+' to increase CUPR"
         	print " 'cr-' to decrease CUPR"
 		print " 's ##' to set SENSITIVITY to ##"
+		print " 'a ##' to set ALLOWEDDIFF to ##"
 		print " 'ct ##' to set CUPTHRESHOLD to ##"
 		print " 'cc ##' to set CUPTHRSCOUNT to ##"
+                print " 'mo #' to set the mode (1= Human moves, 2= Cup Placed, 3= Check cup moved)"  
 		print "'save' to save the current configuration"
 		print "'reset' to overwrite the current configuration with the default one. (Don't forget to save!)"
 
